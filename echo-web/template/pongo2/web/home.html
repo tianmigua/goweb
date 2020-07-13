@@ -1,0 +1,181 @@
+{% extends "../base.html" %}
+{% block content %}
+    <div class="layui-body">
+        <div class="layui-tab layui-tab-brief" lay-filter="docDemoTabBrief">
+            <ul class="layui-tab-title">
+                <li class="layui-this">用户列表</li>
+            </ul>
+            <div class="layui-tab-content">
+                <input type="hidden" name="_csrf" id="_csrf" value="{{_csrf}}" /><br />
+                <div class="layui-form layui-form-pane">
+                    <div class="layui-inline">
+                        <label class="layui-form-label">名称</label>
+                        <div class="layui-input-inline">
+                            <input type="text" name="keywords" placeholder="请输入姓名" autocomplete="off" class="layui-input">
+                        </div>
+                    </div>
+                    <div class="layui-inline">
+                        <label class="layui-form-label">性别</label>
+                        <div class="layui-input-inline">
+                            <select name="sex" lay-verify="" lay-search>
+                                <option value="">全部</option>
+                                <option value="1">男</option>
+                                <option value="2">女</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="layui-inline">
+                        <button lay-submit lay-filter="search" class="layui-btn">
+                            <i class="layui-icon">&#xe615;</i>
+                        </button>
+                    </div>
+                </div>
+                <hr>
+                <div class="layui-form">
+                    <table class="layui-table" id="test" lay-filter="test"></table>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="layui-footer">
+        <!-- 底部固定区域 -->
+        © layui.com - 底部固定区域
+    </div>
+</div>
+{% endblock %}
+{% block scripts %}
+<script src="/assets/js/jquery.min.js"></script>
+<script src="/assets/layui/layui.all.js"></script>
+<script src="/assets/js/common.js"></script>
+<script src="/assets/js/admin.js"></script>
+<script type="text/html" id="toolbar">
+    <div class="layui-btn-group">
+        <button title="添加" class="layui-btn layui-btn-sm" lay-event="add">
+            <i class="layui-icon">&#xe654;</i>
+        </button>
+        <button title="删除" class="layui-btn layui-btn-sm" lay-event="delete">
+            <i class="layui-icon">&#xe640;</i>
+        </button>
+        <button class="layui-btn layui-btn-sm" title="刷新列表" lay-event="refresh">
+            <i class="layui-icon">&#xe669;</i>
+        </button>
+    </div>
+</script>
+<script>
+    var _url = '/user/list';
+    var _add_url = '/user/add';
+    var _edit_url = '/user/edit';
+    var _delete_url = '/user/delete';
+    var _elemId = 'test';
+    layui.use(['form','table'], function(){
+        var laypage = layui.laypage //分页
+        var form = layui.form;
+        var table = layui.table;
+        var _curr = { curr:1 };
+        // 搜索
+        form.on('submit(search)',function (o){
+            table.reload(_elemId,{
+                url:_url
+                ,where:{
+                    keywords:$.trim(o.field.keywords),
+                    sex:o.field.sex
+                }
+                ,page:_curr
+            });
+            return false;
+        })
+        table.render({
+            elem:'#'+_elemId
+            ,id:_elemId
+            ,url:_url
+            ,page:true
+            ,loading:true
+            ,cellMinWidth:120
+            ,toolbar:'#toolbar'
+            ,defaultToolbar:[]
+            ,cellMinWidth: 80
+            ,cols: [
+                [
+                 {type:'checkbox',fixed:'left'}
+                ,{field:'id', width: '8%', title: 'ID'}
+                ,{field:'nickname', width:'10%', title: '昵称'}
+                ,{field:'gender', width: '8%', title: '性别',templet:function (r){
+                    if(r.gender == 1){
+                        return "男";
+                    }else{
+                        return "女";
+                    }
+                }}
+                ,{field:'face',width:'15%',title:'头像',templet:function (r){
+                    return '<img src="'+r.face+'" width="80%" height="80%"/>'
+                }}
+                ,{field:'Age', width: '8%', title: '年龄'}
+                ,{field:'created_time', width: '15%', title: '添加时间'}
+                ,{field:'updated_time', width: '15%', title: '更新时间'}
+                ,{title:'操作',templet:function (r){
+                    var tpl = '<div class="layui-btn-group">';
+                    tpl +=  '<button title="编辑" class="layui-btn layui-btn-sm" lay-event="edit"><i class="layui-icon">&#xe642;</i></button>';
+                    tpl +=  '</div>';
+                    return tpl;
+                }}
+            ]
+            ]
+        });
+        // 操作
+        table.on('tool('+_elemId+')',function (o){
+            if('edit' == o.event){
+                // 编辑
+                $(this).data('url',_edit_url+'?id='+o.data.id);
+                ajax_panel(this);
+            }
+            return false;
+        })
+        // 工具栏
+        table.on('toolbar('+_elemId+')',function (o){
+
+            var checkStatus = table.checkStatus(o.config.id);
+            var data = checkStatus.data;
+            var ids = [];
+            var csrf = '{{_csrf}}'
+            if('add' == o.event){
+                // 新增
+                $(this).data({'url':_add_url,'title':'新增'})
+                ajax_panel(this);
+            }
+            else if('delete' == o.event){
+                // 删除
+                if(data){
+                    for( i = 0; i < data.length;i++) {
+                        if(!parseInt(data[i].isdel)) ids.push(data[i].id);
+                    }
+                    if(!ids.length) return layer.msg('请选择要删除的用户');
+                    layer.open({
+                        shade: false,
+                        content: '确定删除？',
+                        btn: ['确定', '取消'],
+                        'yes': function (index) {
+                            $ajax_post(_delete_url,{'ids':JSON.stringify(ids)},function (r){
+                                layer.msg(r.msg,{time:1500},function(){
+                                    table.reload(_elemId);
+                                })
+                            })
+                            layer.close(index);
+                        },
+                        'cancel':function (index){
+                            layer.close(index);
+                        }
+                    });
+                }else{
+                    layer.msg('请选择要删除的用户');
+                }
+
+            }else if('refresh' == o.event){
+                // 刷新页面
+                table.reload(_elemId);
+            }
+            return false;
+        })
+    });
+</script>
+{% endblock %}

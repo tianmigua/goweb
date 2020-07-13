@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <meta name="csrf-token" content="{{_csrf}}">
+    <title></title>
+    <link href="/assets/bootstrap/css/bootstrap.min.css" rel="stylesheet" />
+    <link href="/assets/layui/css/layui.css" rel="stylesheet" />
+    <link href="/assets/font-awesome-4.7.0/css/font-awesome.min.css" rel="stylesheet" />
+    <link href="/assets/css/admin.css" rel="stylesheet" />
+    <link href="/assets/static/layui/css/formSelects-v4.css" rel="stylesheet">
+</head>
+<body class="layui-layout-body" style="height:100%;overflow-y:scroll;">
+    <!-- Error Tips -->
+    {% for error in _error %}
+        {{ error }}
+    {% endfor %}
+    {% block content %}Default content{% endblock %}
+</body>
+</html>
+<script src="/assets/js/jquery.min.js"></script>
+<script src="/assets/bootstrap/js/bootstrap.min.js"></script>
+<script src="/assets/layui/layui.all.js"></script>
+<script src="/assets/js/common.js"></script>
+<script src="/assets/js/admin.js"></script>
+{% block scripts %}Default head_scripts{% endblock %}

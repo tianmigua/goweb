@@ -1,0 +1,61 @@
+<div th:replace="/layouts/ajax_header.blade"></div>
+<div class="layui-tab layui-tab-brief" lay-filter="docDemoTabBrief">
+    <div class="layui-tab-content">
+        <form class="layui-form" action="/user/edit" method="post" onsubmit="return false">
+           <!--姓名-->
+            <div class="layui-form-item">
+                <label class="layui-form-label" style="width:80px">姓名</label>
+                <div class="layui-input-block">
+                    <input type="text" name="name" th:value="${userInfo[0].name}" required  lay-verify="required" placeholder="请输入姓名" autocomplete="off" class="layui-input">
+                </div>
+            </div>
+            <!--性别-->
+            <div class="layui-form-item layui-form-text">
+                <label class="layui-form-label">性别</label>
+                <div class="layui-input-block">
+                    <th:block th:with="sex_arr=${ {{1,'男'},{2,'女'}} }">
+                        <select name="sex" lay-verify="required">
+                            <option value="" th:text="请选择"></option>
+                            <th:block th:each="v:${sex_arr}">
+                                    <option th:if="${userInfo[0].sex} eq ${v[1]}" th:selected="selected" th:value="${v[1]}"  th:text="${v[1]}"></option>
+                            </th:block>
+                        </select>
+                    </th:block>
+                </div>
+            </div>
+            <!-- 头像-->
+            <div class="layui-form-item">
+                <label class="layui-form-label">头像</label>
+                <div class="layui-input-block">
+                    <img  th:src="${userInfo[0].face} eq ''? @{/images/upload.jpg}:${userInfo[0].face}"   alt="" class="cover">
+                    <input type="hidden" name="face" th:value="${userInfo[0].face}" class="cover">
+                    <button type="button" class="layui-btn upload_btn" target="cover">
+                        <i class="layui-icon">&#xe67c;</i>上传图片
+                    </button>
+                </div>
+            </div>
+            <!--年龄-->
+            <div class="layui-form-item">
+                <label class="layui-form-label" style="width:80px">年龄</label>
+                <div class="layui-input-block">
+                    <input type="text" name="age" th:value="${userInfo[0].age}" required  lay-verify="required" placeholder="请输入年龄" autocomplete="off" class="layui-input">
+                </div>
+            </div>
+            <!--手机号-->
+            <div class="layui-form-item">
+                <label class="layui-form-label" style="width:80px">手机号</label>
+                <div class="layui-input-block">
+                    <input type="text" name="mobile" th:value="${userInfo[0].mobile}" required  lay-verify="required" placeholder="请输入年龄" autocomplete="off" class="layui-input">
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <div class="layui-input-block">
+                    <input type="hidden" name="id" th:value="${userInfo[0].id}">
+                    <button class="layui-btn" lay-submit lay-filter="*">立即提交</button>
+                    <button type="reset" class="layui-btn layui-btn-primary">重置</button>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+<div th:replace="/layouts/footer.blade"></div>

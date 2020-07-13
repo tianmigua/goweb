@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <meta name="csrf-token" content="{{_csrf}}">
+    <title>{% block head_title %}CloudVR 项目管理平台{% endblock %}</title>
+    <link href="/assets/layui/css/layui.css" rel="stylesheet" />
+</head>
+<body class="layui-layout-body">
+    <div class="layui-layout layui-layout-admin">
+        <div class="layui-header">
+            <div class="layui-logo">CloudVR 项目管理平台</div>
+            <!-- 头部区域（可配合layui已有的水平导航） -->
+            <ul class="layui-nav layui-layout-left">
+                <li class="layui-nav-item"><a href="">用户</a></li>
+            </ul>
+            <!-- 头部区域（可配合layui已有的水平导航） -->
+            <ul class="layui-nav layui-layout-right">
+                <li class="layui-nav-item">
+                    <a href="javascript:;">
+                        <img src="http://t.cn/RCzsdCq" class="layui-nav-img">
+                        <span>{{_user.Nickname}}</span>
+                    </a>
+                </li>
+                <li class="layui-nav-item"><a href="/logout">退出</a></li>
+            </ul>
+        </div>
+    
+        <div class="layui-side layui-bg-black">
+            <div class="layui-side-scroll">
+                <!-- 左侧导航区域（可配合layui已有的垂直导航） -->
+                <ul class="layui-nav layui-nav-tree" lay-filter="test">
+                    <li class="layui-nav-item layui-nav-itemed"><a class=""
+                                                                   href="javascript:;">用户</a>
+                        <dl class="layui-nav-child">
+                            <dd>
+                                <a href="javascript:;">用户列表</a>
+                            </dd>
+                        </dl>
+                    </li>
+                </ul>
+            </div>
+        </div>
+
+    <!-- Error Tips -->
+    {% for error in _error %}
+        {{ error }}
+    {% endfor %}
+    {% block content %}Default content{% endblock %}
+    {% block scripts %}Default head_scripts{% endblock %}
+    <div class="layui-footer">
+        <!-- 底部固定区域 -->
+        © layui.com - 底部固定区域
+    </div>
+</div>

@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<!--[if lt IE 7]>      <html class="no-js lt-ie9 lt-ie8 lt-ie7"> <![endif]-->
+<!--[if IE 7]>         <html class="no-js lt-ie9 lt-ie8"> <![endif]-->
+<!--[if IE 8]>         <html class="no-js lt-ie9"> <![endif]-->
+<!--[if gt IE 8]><!-->
+<html class="no-js">
+<!--<![endif]-->
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>后台登录</title>
+    <!-- Place favicon.ico and apple-touch-icon.png in the root directory -->
+    <link rel="shortcut icon" href="favicon.ico">
+    <link rel="stylesheet" href="/bootstrap/css/bootstrap.min.css">
+    <link rel="stylesheet" href="/css/animate.css">
+    <link rel="stylesheet" href="/css/admin-login.css">
+    <link rel="stylesheet" href="/layui/css/layui.css">
+    <!-- Modernizr JS -->
+    <script src="/js/modernizr-2.6.2.min.js"></script>
+    <!-- FOR IE9 below -->
+</head>
+<body class="style-2">
+<div class="container">
+    <div class="row">
+        <div class="col-md-4">
+
+            <!-- Start Sign In Form -->
+            <form  class="fh5co-form animate-box layui-form" data-animate-effect="fadeInLeft" method="post">
+                <h2 style="text-transform:none;">兰亭数字-运营管理平台</h2>
+                <div class="form-group">
+                    <label for="username" class="sr-only">管理员账号</label>
+                    <input type="text" class="form-control" name="name" lay-verify="required" id="name" placeholder="请输入账户" autocomplete="off">
+                </div>
+                <div class="form-group">
+                    <label for="password" class="sr-only">管理员密码</label>
+                    <input type="password" class="form-control" name="password" lay-verify="required" id="password" placeholder="请输入密码" autocomplete="off">
+                </div>
+                <div class="form-group">
+                    <label for="remember"><input type="checkbox" lay-ignore name="remember_token" value="1" id="remember"> 自动登录</label>
+                </div>
+                <div class="form-group">
+                    <input type="submit" id="login" value="登录" lay-submit lay-filter="login" class="btn btn-primary btn-block">
+                </div>
+            </form>
+            <!-- END Sign In Form -->
+
+        </div>
+    </div>
+
+</div>
+<div style="position:fixed;bottom:5%;width:100%;">
+    <div class="row" >
+        <div class="col-md-12 text-center">
+            <p>
+                <small>Copyright © 兰亭数字</small>
+            </p>
+        </div>
+    </div>
+</div>
+</body>
+</html>
+<script src="/js/jquery.min.js"></script>
+<!-- Bootstrap -->
+<script src="/bootstrap/js/bootstrap.min.js"></script>
+<!-- Placeholder -->
+<script src="/js/jquery.placeholder.min.js"></script>
+<!-- Waypoints -->
+<script src="/js/jquery.waypoints.min.js"></script>
+<script src="/layui/layui.all.js"></script>
+<!-- Main JS -->
+<script src="/js/admin-login.js"></script>
+<script>
+    layui.use('form', function(){
+        var form = layui.form;
+        //监听提交
+        form.on('submit(login)', function(data){
+            $.ajax({
+                url: '/login',
+                type: "POST",
+                data:$('form').serializeArray(),
+                dataType:'json',
+                success: function (data) {
+                    if(data.code==400){
+                        layer.msg(data.msg);
+                    }
+                    if(data.code==200){
+                        layer.msg(data.msg,{time:1000},function(){
+                            window.location.href = data.address;
+                        })
+                    }
+                },
+                error:function(XMLHttpRequest){
+                    var err = XMLHttpRequest.responseJSON.errors;
+                    var errs = [];
+                    Object.keys(err).forEach(function(key){
+                        if(key){
+                            errs.push(err[key][0]);
+                        }
+                    });
+                    if(errs.length>0){
+                        layer.msg(errs[0]);
+                    }
+                }
+            });
+            return false;
+        });
+    });
+</script>

@@ -1,0 +1,76 @@
+{% extends "../header2.html" %}
+{% block content %}
+<div class="layui-tab layui-tab-brief" lay-filter="docDemoTabBrief">
+    <div class="layui-tab-content">
+        <form class="layui-form" action="/user/update" method="post" onsubmit="return false">
+            <input type="hidden" name="id"" value="{{userInfo.Id}}" /><br />
+           <!--用户名-->
+            <div class="layui-form-item">
+                <label class="layui-form-label" style="width:80px">用户名</label>
+                <div class="layui-input-block">
+                    <input type="text" name="nickname" value="{{userInfo.Nickname}}" required  lay-verify="required" placeholder="请输入用户名" autocomplete="off" class="layui-input">
+                </div>
+            </div>
+            <!--密码-->
+            <div class="layui-form-item">
+                <label class="layui-form-label" style="width:80px">密码</label>
+                <div class="layui-input-block">
+                    <input type="text" name="password" value="{{userInfo.Password}}" required  lay-verify="required" placeholder="请输入密码" autocomplete="off" class="layui-input">
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <label class="layui-form-label" style="width:100px">出生日期</label>
+                <div class="layui-input-block">
+                    <input type="text" name="birthday"" value='{{ userInfo.Birthday.Format("2006-01-02")}}' required  lay-verify="required|datetime" placeholder="请输入出生日期" autocomplete="off" class="layui-input" id="birthday" placeholder="请选择上架时间">
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <label class="layui-form-label">头像</label>
+                <div class="layui-input-block">
+                    <img src="{% if(userInfo.face != '')%} {{userInfo.Face}} {% else %}  /assets/static/images/upload.jpg {% endif %}" alt="" class="cover">
+                    <input type="hidden" name="cover" value="{{userInfo.Face}}" class="cover">
+                    <button type="button" class="layui-btn upload_btn" target="cover">
+                        <i class="layui-icon">&#xe67c;</i>上传图片
+                    </button>
+                </div>
+            </div>
+            <!--性别-->
+            <div class="layui-form-item layui-form-text">
+                <label class="layui-form-label">性别</label>
+                <div class="layui-input-block">
+                    <select name="sex" lay-verify="required">
+                        <option value="0">请选择</option>
+                        <option value="1" {% if  userInfo.Gender==1 %} selected {% endif%}>男</option>
+                        <option value="2" {% if  userInfo.Gender==2 %} selected {% endif%}>女</option>
+                    </select>
+                </div>
+            </div>
+            <!--邮箱-->
+            <div class="layui-form-item">
+                <label class="layui-form-label" style="width:80px">邮箱</label>
+                <div class="layui-input-block">
+                    <input type="text" name="email" value="{{userInfo.Email}}" required  lay-verify="required" placeholder="请输入邮箱" autocomplete="off" class="layui-input">
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <div class="layui-input-block">
+                    <button class="layui-btn" lay-submit lay-filter="*">立即提交</button>
+                    <button type="reset" class="layui-btn layui-btn-primary">重置</button>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+{% endblock %}
+{% block scripts %}
+<script>
+    layui.use('form', function(){
+      var form = layui.form;
+      //执行一个laydate实例
+      laydate.render({
+            type:'date',
+            elem: '#birthday', //指定元素
+      });
+    });
+    </script>
+{% endblock %}

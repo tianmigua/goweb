@@ -1,0 +1,66 @@
+{% extends "../header2.html" %}
+{% block content %}
+<div class="layui-tab layui-tab-brief" lay-filter="docDemoTabBrief">
+    <div class="layui-tab-content">
+        <form class="layui-form" action="/user/save" method="post" onsubmit="return false">
+            <input type="hidden" name="_csrf" value="{{_csrf}}" /><br />
+           <!--用户名-->
+            <div class="layui-form-item">
+                <label class="layui-form-label" style="width:80px">用户名</label>
+                <div class="layui-input-block">
+                    <input type="text" name="nickname" value="" required  lay-verify="required" placeholder="请输入用户名" autocomplete="off" class="layui-input">
+                </div>
+            </div>
+            <!--密码-->
+            <div class="layui-form-item">
+                <label class="layui-form-label" style="width:80px">密码</label>
+                <div class="layui-input-block">
+                    <input type="text" name="password" value="" required  lay-verify="required" placeholder="请输入密码" autocomplete="off" class="layui-input">
+                </div>
+            </div>
+            <!--性别-->
+            <div class="layui-form-item layui-form-text">
+                <label class="layui-form-label">性别</label>
+                <div class="layui-input-block">
+                    <select name="sex" lay-verify="required">
+                        <option value="0">请选择</option>
+                        <option value="1">男</option>
+                        <option value="2">女</option>
+                    </select>
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <label class="layui-form-label" style="width:100px">出生日期</label>
+                <div class="layui-input-block">
+                    <input type="text" name="birthday"" value="" required  lay-verify="required|datetime" placeholder="请输入出生日期" autocomplete="off" class="layui-input" id="birthday" placeholder="请选择上架时间">
+                </div>
+            </div>
+            <!--邮箱-->
+            <div class="layui-form-item">
+                <label class="layui-form-label" style="width:80px">邮箱</label>
+                <div class="layui-input-block">
+                    <input type="text" name="email" value="" required  lay-verify="required" placeholder="请输入邮箱" autocomplete="off" class="layui-input">
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <div class="layui-input-block">
+                    <button class="layui-btn" lay-submit lay-filter="*">立即提交</button>
+                    <button type="reset" class="layui-btn layui-btn-primary">重置</button>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+{% endblock %}
+{% block scripts %}
+<script>
+    layui.use('form', function(){
+      var form = layui.form;
+      //执行一个laydate实例
+      laydate.render({
+            type:'date',
+            elem: '#birthday', //指定元素
+      });
+    });
+    </script>
+{% endblock %}
